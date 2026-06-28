@@ -1,3 +1,6 @@
+# Tech content
+You may watch the informational [tech content in Meta](https://web.facebook.com/reel/1021512850352992). The audio is in Filipino with English subs.
+
 # Reindex Archive Sessions for Codex
 
 > **Sustainability reminder:** This indexer reads Codex rollout JSONL files, whose internal structure may evolve as Codex is updated by OpenAI, a product ultimately owned and maintained by Kuya Sam and company. The parser is intentionally tolerant of unfamiliar properties and unrelated event types, so ordinary additions should not require any changes. However, the rollout format is not treated here as a permanently stable public contract. From time to time, preferably once a month or after a major Codex update, manually compare a recent raw `.jsonl` file with the fields expected by `index.js`. Check whether conversation event names, speaker roles, timestamps, message fields, attachment references, or turn identifiers have changed. If the structure remains compatible, leave the script as-is. A quick manual review is still better than discovering months later that a silent product change produced an incomplete index. In short: sustainable, yes; maintenance-free forever, no. Kuya Sam may rearrange the furniture.
