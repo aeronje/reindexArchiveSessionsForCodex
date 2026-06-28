@@ -1,5 +1,6 @@
 # Tech content
-You may watch the informational [tech content in Meta](https://web.facebook.com/reel/1021512850352992). The audio is in Filipino with English subs.
+You may watch the informational [tech content in Meta](https://web.facebook.com/reel/1021512850352992) or download the `informationalReindexArchiveSessionsForCodex.mp4` instead. The audio is in Filipino with English subs.
+
 
 # Reindex Archive Sessions for Codex
 
