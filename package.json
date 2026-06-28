@@ -1,0 +1,15 @@
+{
+  "name": "codex-rollout-indexer",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Consolidate Codex rollout JSONL conversations into one portable CSV index.",
+  "type": "module",
+  "scripts": {
+    "index": "node index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

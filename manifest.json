@@ -1,0 +1,6 @@
+{
+  "name": "codex-rollout-indexer",
+  "version": "1.0.0",
+  "schemaVersion": 1,
+  "artifact": "codexIndex.csv"
+}
