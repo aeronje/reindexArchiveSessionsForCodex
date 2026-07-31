@@ -72,3 +72,31 @@ test("overwrites an existing codexIndex.csv", async () => {
   assert.match(csv, /fresh data/);
   assert.doesNotMatch(csv, /stale data/);
 });
+
+test("preserves Unicode line separators inside JSON strings", async () => {
+  const root = mkdtempSync(join(tmpdir(), "codex-index-unicode-separator-"));
+  const input = join(root, "rollouts");
+  mkdirSync(input);
+  writeFileSync(join(input, "rollout.jsonl"), [
+    JSON.stringify({ type: "session_meta", payload: { session_id: "session-3" } }),
+    JSON.stringify({
+      timestamp: "2026-07-31T06:45:08.203Z",
+      type: "event_msg",
+      payload: {
+        type: "agent_message",
+        phase: "final_answer",
+        message: "Let’s Build Your\u2028CX Advantage",
+      },
+    }),
+  ].join("\n"));
+
+  const result = await buildIndex({
+    inputDirectory: input,
+    userName: "pogi",
+    assistantName: "donna",
+  }, root);
+  const csv = readFileSync(result.outputPath, "utf8");
+
+  assert.equal(result.rowCount, 1);
+  assert.match(csv, /Let’s Build Your\u2028CX Advantage/u);
+});

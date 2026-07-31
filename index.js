@@ -4,7 +4,6 @@
 
 import { createReadStream, existsSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
-import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 
 const OUTPUT_NAME = "codexIndex.csv";
@@ -12,7 +11,7 @@ const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 
 // Edit only these three values for your own Codex archive and speaker names.
 const SETTINGS = {
-  inputDirectory: "C:\\users\\aeronje\\Downloads\\rolloutFiles", // Hello po, iyong naka-double quotes paki-palitan po kung saan located ang lahat ng .jsonl files niyo sa codex. I would suggest pagsamasamahin niyo na lahat by creating a new copy para isang bagsakan na lang.
+  inputDirectory: "/home/aeronje/personal/codex/rolloutFiles", // Hello po, iyong naka-double quotes paki-palitan po kung saan located ang lahat ng .jsonl files niyo sa codex. I would suggest pagsamasamahin niyo na lahat by creating a new copy para isang bagsakan na lang.
   userName: "pogi", // Iyong naka-double quotes, pangalan na gusto mo lumabas mamaya sa spreadsheet, iyong pangalan niyo po. Yes pangalan po ng tao. Pogi talaga ako kaya pangalan ko Pogi.
   assistantName: "donna", // Iyong naka-double quotes, wala akong jowa na donna ang name, ok?, pangalan lang iyan ng bot/coding agent or AI mo, kung gusto mo lagay mo pangalan muning, chuchu or brownie bahala ka!
 };
@@ -44,6 +43,27 @@ function findJsonlFiles(root) {
   };
   visit(root);
   return results.sort((left, right) => left.localeCompare(right));
+}
+
+async function* readJsonlLines(path) {
+  let remainder = "";
+  const stream = createReadStream(path, { encoding: "utf8" });
+
+  for await (const chunk of stream) {
+    remainder += chunk;
+    let newlineIndex;
+    while ((newlineIndex = remainder.indexOf("\n")) !== -1) {
+      let line = remainder.slice(0, newlineIndex);
+      if (line.endsWith("\r")) line = line.slice(0, -1);
+      yield line;
+      remainder = remainder.slice(newlineIndex + 1);
+    }
+  }
+
+  if (remainder) {
+    if (remainder.endsWith("\r")) remainder = remainder.slice(0, -1);
+    yield remainder;
+  }
 }
 
 function fileNameFromReference(value) {
@@ -95,10 +115,7 @@ async function parseRollout(path, config, sourceOrder) {
   let sessionId = "";
   let activeTurnId = "";
   let lineNumber = 0;
-  const lines = createInterface({
-    input: createReadStream(path, { encoding: "utf8" }),
-    crlfDelay: Infinity,
-  });
+  const lines = readJsonlLines(path);
 
   for await (const line of lines) {
     lineNumber += 1;
